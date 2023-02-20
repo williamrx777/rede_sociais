@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'profile.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+          <li><a href="{% url 'batepapo' %}">Bate-Papo</a></li>
+          <li><a href="{% url 'sair' %}">Logout</a> </li>
+        </ul>
+        {% if messages %}
+                                <br>
+                                {% for message in messages %}
+                                    <div class="alert {{message.tags}}">
+                                        {{message}}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+        <form action="{% url 'profile' %}" method="get">{% csrf_token %}
+          <input type="text" name="texto" value="{% if texto %}{{texto}}{% endif %}" placeholder="Pesquisa">
+          <button type="submit">Go</button>
+        </form>
+      </nav>
+    </header>
+    <form action="{% url 'profile' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+      <input type="file" name="perfil" placeholder="perfil">
+      <input type="file" name="capa" placeholder="capa">
+      <input type="submit" value="submit">
+    </form>
+    <main>
+      <div class="profile-container">
+        {% for prof in profile %}
+        <div class="profile-header">
+           {% if prof.capa %}
+          <img  src="{{prof.capa.url}}" alt="Profile Header">
+          {% endif %}
+        </div>
+        <div class="profile-info">
+           {% if prof.perfil %}
+          <img width="150px" src="{{prof.perfil.url}}" alt="Profile Picture">
+          {% endif %}
+          {% endfor %}
+          <h2>{{ user.username }}</h2>
+          <p>{{ user.email }}</p>
+        </div>
+        <div class="profile-posts">
+          <h3>Recent Posts</h3>
+          {% for post in conta %}
+            <div class="profile-post">
+              <p>{{ post.texto }}</p>
+              {% if post.foto %}
+                <img width="300px" src="{{ post.foto.url }}" alt="Post Picture">
+              <a href="{% url 'remove_post' post.id %}" >Apagar</a>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </main>
+    <footer>
+      <p>Copyright ©2023 My Social Network</p>
+    </footer>
+  </body>
+</html>

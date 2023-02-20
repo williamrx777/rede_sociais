@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Batepapo</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'mensages.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+  <header>
+    <h1>Bate-Papo</h1>
+  </header>
+  <nav>
+    <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+          <li><a href="{% url 'batepapo' %}">Bate-Papo</a></li>
+          <li><a href="{% url 'sair' %}">Logout</a> </li>
+    </ul>
+  </nav>
+  <footer>
+    {% if messages %}
+                                <br>
+                                {% for message in messages %}
+                                    <div class="alert {{message.tags}}">
+                                        {{message}}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+    <h2>{{ user.username }}</h2>
+    <p>{{ user.email }}</p>
+    <form action="{% url 'batepapo' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+      <textarea name="mensagem" placeholder="Mensagem"></textarea>
+      <input type="file" name="imagem" placeholder="Imagem">
+      <input type="submit" value="Enviar">
+    </form>
+    <h3>Chat bate papo</h3>
+    {%for me in mensagem%}
+    <p>{{me.usuario}}</p>
+    <p>{{me}}</p>
+      {% if me.imagem %}
+        <img width="100px" src="{{ me.imagem.url }}" alt="Imagem da Mensagem">
+      {% endif %}
+    <a href="{% url 'remove_batepapo' me.id %} " class="btn btn-danger">Apagar</a>
+  {% endfor %}
+     <hr>
+<h3>Enviar mensagens para amigos</h3>
+       <ul>
+            <h3>Amigos</h3>
+
+            <li><a href="{% url 'enviar_mensagem' 1 %}">Will</a></li>
+            <li><a href="{% url 'enviar_mensagem' 2 %}">Deb</a></li>
+        </ul>
+      <hr>
+ <h3>Receber mensagens de amigos</h3>
+      <ul>
+            <h3>Amigos</h3>
+            <li><a href="{% url 'exibir_conversa' 1 %}">Will</a></li>
+            <li><a href="{% url 'exibir_conversa' 2 %}">Deb</a></li>
+        </ul>
+
+  </footer>
+</body>
+</html>

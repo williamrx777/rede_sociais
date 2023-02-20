@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block 'content' %}
+    <h2>Conecte-se com seus amigos e familiares</h2>
+      <p>Crie uma conta gratuita e comece a compartilhar sua vida com as pessoas que você ama.</p>
+      <form action="{% url 'cadastro' %}" method="post">{% csrf_token %}
+        <input type="text" placeholder="Usuario" name="nome">
+        <input type="email" placeholder="Endereço de e-mail" name="email">
+        <input type="password" placeholder="Senha" name="senha">
+          <input type="password" placeholder="Confirmar_senha" name="confirmar_senha">
+        <button type="submit">Criar conta</button><a href="{% url 'logar' %}">Já tem cadastro clique aqui</a>
+      </form>
+    </main>
+{% endblock %}
